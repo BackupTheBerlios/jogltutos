@@ -32,6 +32,7 @@ public class Sol {
             gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
             gl.glLoadIdentity();
             gl.glTranslatef( 0, 0f, -16);
+            gl.glRotatef(rtri,0,0,1);
             int L = 25; // Longueur de la surface
             int l = 25; // Largeur de la surface
             float t = .5f; // taille des triangles
