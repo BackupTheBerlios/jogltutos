@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refactor PUBLIC "-//Borland Software Corporation//Refactor 1.0//EN" "http://www.borland.com/devsupport/jbuilder/dtds/refactor_1_0.dtd">
+<refactor>
+  <rename-class id="6AP05194ZN4EB0F23C01QKH0" creation-time="Tue Feb 01 11:52:13.625 CET 2005">
+    <old-class-name>Untitled1</old-class-name>
+    <new-class-name>QCam</new-class-name>
+  </rename-class>
+</refactor>

@@ -3,7 +3,7 @@ import java.awt.event.*;
 import net.java.games.jogl.util.*;
 import net.java.games.jogl.*;
 
-public class BouleVirtuelle {
+public class RotationPersistante {
 
     static Animator animator = null;
 
@@ -16,7 +16,7 @@ public class BouleVirtuelle {
            angle de rotation : alpha
          */
         double rx, ry, rz, alpha;
-
+        double curx, cury, curz, curalpha;
         /* Coordonnées du point au moment du click : (cx, cy)
            Coordonnées courantes du curseur : (nx, ny)
          */
@@ -33,20 +33,41 @@ public class BouleVirtuelle {
             glDrawable.addMouseMotionListener(this);
             glDrawable.addMouseListener(this);
         }
-
+        float [] matrice = new float[16];
+        boolean pu = true;
         public void display(GLDrawable gLDrawable) {
 
             final GL gl = gLDrawable.getGL();
             GLUT glut = new GLUT();
             gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-            gl.glLoadIdentity();
+
+            gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX,matrice);
+            //for (int i = 0; i < 16; i++) System.out.print(matrice[i] + "Av ");
+            //System.out.println("\n-------------------------------------------");
+
+            //gl.glLoadIdentity();
+            gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX,matrice);
+            //for (int i = 0; i < 16; i++) System.out.print(matrice[i] + "Ap ");
+            //System.out.println("\n");
+            //gl.glPopMatrix();
+            gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX,matrice);
+            //for (int i = 0; i < 16; i++) System.out.print(matrice[i] + "Po ");
+            //System.out.println("\n");
+
             // Positionne la caméra
-
-            gl.glTranslatef(0, 0, -20);
-
+            if (pu){
+                gl.glTranslatef(0, 0, -20);
+                pu = false;
+            }
+            //for (int i = 0; i < 16; i++) System.out.print(matrice[i] + "C ");
+            //            System.out.println("");
             // Effectue la rotation courante
-            gl.glRotated(alpha, rx, ry, rz);
 
+            gl.glRotated(alpha, rx, ry, rz);
+            alpha = rx = ry = rz = 0;
+            //gl.glPopMatrix();
+            //gl.glRotated(curalpha, curx, cury, curz);
+            //gl.glMultMatrixf(matrice);
             // Dessine le cube
             gl.glColor3f(0, 0, 1);
             glut.glutSolidCube(gl, 8);
@@ -60,7 +81,13 @@ public class BouleVirtuelle {
             cy = e.getY();
         }
 
-        public void mouseReleased(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {
+            /*curx = rx;
+            cury = ry;
+            curz = rz;
+            curalpha = alpha;*/
+            //ry = ry = rz = alpha = 0;
+        }
 
 
         public void mouseDragged(MouseEvent e) {
@@ -125,6 +152,7 @@ public class BouleVirtuelle {
             ry = vz * ux - vx * uz;
             rz = vx * uy - vy * ux;
 
+            cx = nx; cy = ny;
             /* Les variables de rotation sont maintenant toutes définies et
                seront appellées dans la méthode display
             */
@@ -174,7 +202,112 @@ public class BouleVirtuelle {
 
         public void mouseMoved(MouseEvent e) {}
 
+        /**
+             * Classe interne CamQuaternion
+             * Représente les Quaternions de manière assez simple
+             * Les opérations comme le conjugué ou la norme ne sont pas implémentées
+             */
+            strictfp class CamQuaternion {
 
+                private float w;
+                private float x;
+                private float y;
+                private float z;
+
+                /**Constructeur*/
+                CamQuaternion() {
+                    w = 1.0f;
+                    x = 0.0f;
+                    y = 0.0f;
+                    z = 0.0f;
+                }
+
+                /**
+                 * Transforme un quaternion en un quaternion représentant une
+                 * rotation quelconque dans l'espace
+                 */
+                void createFromAxisAngle(float x, float y, float z, float degrees) {
+
+                    // On convertit les degrés en radians
+                    float angle = (degrees / 180.0f) * (float)Math.PI;
+
+                    // On calcule sinus(theta/2) une seule fois pour optimiser
+                    float result = (float)Math.sin(angle / 2.0f);
+
+                    // On calcule la valeur de w = cosinus(theta / 2)
+                    this.w = (float)Math.cos(angle / 2.0f);
+
+                    // On calcule les coordonnées x y z du quaternion
+                    this.x = x * result;
+                    this.y = y * result;
+                    this.z = z * result;
+                    normaliser();
+                }
+
+                /**
+                 * Normalise le quaternion courant
+                 */
+                void normaliser() {
+                    float norme = norme();
+                    w = w/norme;
+                    x = x/norme;
+                    y = y/norme;
+                    z = z/norme;
+                }
+
+                /**
+                 * Renvoie la norme du quaternion courant
+                 */
+                float norme() {
+                    return w*w + x*x + y*y + z*z;
+                }
+
+                /**
+                 * Pour créer à partir d'un quaternion une matrice qui peut être utilisée
+                 * par OpenGL
+                 */
+                float[] createMatrix() {
+                    float[] matrix = new float[16];
+
+                    // Première COLONNE
+                    matrix[0] = 1.0f - 2.0f * ( y*y + z*z);
+                    matrix[1] = 2.0f * ( x*y + z*w);
+                    matrix[2] = 2.0f * ( x*z - y*w);
+                    matrix[3] = 0.0f;
+
+                    // Seconde COLONNE
+                    matrix[4] = 2.0f * ( x*y - z*w);
+                    matrix[5] = 1.0f - 2.0f * ( x*x + z*z);
+                    matrix[6] = 2.0f * ( z*y + x*w);
+                    matrix[7] = 0.0f;
+
+                    // Troisième COLONNE
+                    matrix[8] = 2.0f * ( x*z + y*w);
+                    matrix[9] = 2.0f * ( y*z - x*w);
+                    matrix[10] = 1.0f - 2.0f * ( x*x + y*y);
+                    matrix[11] = 0.0f;
+
+                    // Quatrième COLONNE
+                    matrix[12] = 0.0f;
+                    matrix[13] = 0.0f;
+                    matrix[14] = 0.0f;
+                    matrix[15] = 1.0f;
+
+                    // matrix est une matrice 4x4 homogène qui peut être utilisée pour les
+                    // calculs avec les matrices OpenGL
+                    return matrix;
+                }
+
+                /**Pour multiplier 2 quaternions*/
+                CamQuaternion multiplier(CamQuaternion q) {
+                    CamQuaternion resultat = new CamQuaternion();
+                    resultat.w = w * q.w - x * q.x - y * q.y - z * q.z;
+                    resultat.x = w * q.x + x * q.w + y * q.z - z * q.y;
+                    resultat.y = w * q.y + y * q.w + z * q.x - x * q.z;
+                    resultat.z = w * q.z + z * q.w + x * q.y - y * q.x;
+                    return resultat;
+                }
+    }//FIN DE LA CLASSE CamQuaternion
     }
 
 

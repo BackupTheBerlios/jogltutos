@@ -1,0 +1,71 @@
+
+An unexpected exception has been detected in native code outside the VM.
+Unexpected Signal : EXCEPTION_ACCESS_VIOLATION (0xc0000005) occurred at PC=0x69587223
+Function=DllMain+0x858A3
+Library=C:\WINNT\system32\nvoglnt.dll
+
+Current Java thread:
+	at net.java.games.jogl.impl.windows.WindowsGLImpl.glGetFloatv(Native Method)
+	at BouleVirtuelle$Renderer.display(BouleVirtuelle.java:24)
+	at net.java.games.jogl.impl.GLDrawableHelper.display(GLDrawableHelper.java:74)
+	at net.java.games.jogl.GLCanvas$DisplayAction.run(GLCanvas.java:221)
+	at net.java.games.jogl.impl.GLContext.invokeGL(GLContext.java:287)
+	- locked <0x100a11c0> (a net.java.games.jogl.impl.windows.WindowsOnscreenGLContext)
+	at net.java.games.jogl.GLCanvas.displayImpl(GLCanvas.java:208)
+	at net.java.games.jogl.GLCanvas.display(GLCanvas.java:75)
+	at net.java.games.jogl.Animator$1.run(Animator.java:107)
+	at java.lang.Thread.run(Thread.java:534)
+
+Dynamic libraries:
+0x00400000 - 0x00407000 	F:\essi\JBuilder2005\jdk1.4\bin\javaw.exe
+0x78460000 - 0x784E3000 	C:\WINNT\system32\ntdll.dll
+0x78ED0000 - 0x78F32000 	C:\WINNT\system32\ADVAPI32.dll
+0x77E70000 - 0x77F2E000 	C:\WINNT\system32\KERNEL32.DLL
+0x770C0000 - 0x77131000 	C:\WINNT\system32\RPCRT4.DLL
+0x77E00000 - 0x77E5F000 	C:\WINNT\system32\USER32.dll
+0x77F40000 - 0x77F7B000 	C:\WINNT\system32\GDI32.dll
+0x78000000 - 0x78045000 	C:\WINNT\system32\MSVCRT.dll
+0x08000000 - 0x08138000 	F:\essi\JBuilder2005\jdk1.4\jre\bin\client\jvm.dll
+0x77540000 - 0x77571000 	C:\WINNT\system32\WINMM.dll
+0x10000000 - 0x10007000 	F:\essi\JBuilder2005\jdk1.4\jre\bin\hpi.dll
+0x007E0000 - 0x007EE000 	F:\essi\JBuilder2005\jdk1.4\jre\bin\verify.dll
+0x007F0000 - 0x00809000 	F:\essi\JBuilder2005\jdk1.4\jre\bin\java.dll
+0x00810000 - 0x0081D000 	F:\essi\JBuilder2005\jdk1.4\jre\bin\zip.dll
+0x18470000 - 0x1857F000 	F:\essi\JBuilder2005\jdk1.4\jre\bin\awt.dll
+0x777F0000 - 0x7780E000 	C:\WINNT\system32\WINSPOOL.DRV
+0x79450000 - 0x79460000 	C:\WINNT\system32\MPR.DLL
+0x75E00000 - 0x75E1A000 	C:\WINNT\system32\IMM32.dll
+0x77A40000 - 0x77B2F000 	C:\WINNT\system32\ole32.dll
+0x18580000 - 0x185D0000 	F:\essi\JBuilder2005\jdk1.4\jre\bin\fontmanager.dll
+0x51000000 - 0x51050000 	C:\WINNT\system32\ddraw.dll
+0x72810000 - 0x72816000 	C:\WINNT\system32\DCIMAN32.dll
+0x5C000000 - 0x5C0C8000 	C:\WINNT\system32\D3DIM700.DLL
+0x02C70000 - 0x02C75000 	F:\essi\JBuilder2005\jdk1.4\jre\bin\jawt.dll
+0x02C80000 - 0x02CE1000 	F:\essi\jogl\nehe\jogl.dll
+0x69310000 - 0x693D7000 	C:\WINNT\system32\OPENGL32.dll
+0x6FA00000 - 0x6FA20000 	C:\WINNT\system32\GLU32.dll
+0x03180000 - 0x0318B000 	C:\program files\powerstrip\pshook.dll
+0x779A0000 - 0x77A3B000 	C:\WINNT\system32\oleaut32.dll
+0x69500000 - 0x69A26000 	C:\WINNT\system32\nvoglnt.dll
+0x77910000 - 0x77933000 	C:\WINNT\system32\imagehlp.dll
+0x72970000 - 0x7299D000 	C:\WINNT\system32\DBGHELP.dll
+0x68EA0000 - 0x68EAB000 	C:\WINNT\system32\PSAPI.DLL
+
+Heap at VM Abort:
+Heap
+ def new generation   total 576K, used 275K [0x10010000, 0x100b0000, 0x104f0000)
+  eden space 512K,  41% used [0x10010000, 0x10044ff8, 0x10090000)
+  from space 64K, 100% used [0x100a0000, 0x100b0000, 0x100b0000)
+  to   space 64K,   0% used [0x10090000, 0x10090000, 0x100a0000)
+ tenured generation   total 1408K, used 860K [0x104f0000, 0x10650000, 0x14010000)
+   the space 1408K,  61% used [0x104f0000, 0x105c7398, 0x105c7400, 0x10650000)
+ compacting perm gen  total 5632K, used 5529K [0x14010000, 0x14590000, 0x18010000)
+   the space 5632K,  98% used [0x14010000, 0x14576748, 0x14576800, 0x14590000)
+
+Local Time = Wed Jan 26 14:59:44 2005
+Elapsed Time = 4
+#
+# The exception above was detected in native code outside the VM
+#
+# Java VM: Java HotSpot(TM) Client VM (1.4.2_04-b05 mixed mode)
+#
